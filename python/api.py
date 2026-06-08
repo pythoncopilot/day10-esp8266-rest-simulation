@@ -14,7 +14,6 @@ def response(success, data=None, error=None):
 def home():
     return jsonify(response(True, "Day 10 ESP8266 Simulation API"))
 
-
 @app.route("/devices", methods=["POST"])
 def add_device():
     data = request.json
