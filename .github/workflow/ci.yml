@@ -1,19 +1,15 @@
-name: Day 10 IoT Simulation CI
+name: Day 10 Python Code Validation
 
 on:
   push:
     paths:
       - "python/**"
-      - "arduino/**"
-      - "database/**"
   pull_request:
     paths:
       - "python/**"
-      - "arduino/**"
-      - "database/**"
 
 jobs:
-  test:
+  validate:
     runs-on: ubuntu-latest
 
     steps:
@@ -25,14 +21,10 @@ jobs:
         with:
           python-version: "3.10"
 
-      - name: Install dependencies
-        run: |
-          pip install flask requests
-
-      - name: Compile Python files
+      - name: Compile Python files (syntax check)
         run: |
           python -m compileall python
 
-      - name: Validate imports
+      - name: Check imports (api + db)
         run: |
           python -c "import sys; sys.path.append('python'); import api; import db"
