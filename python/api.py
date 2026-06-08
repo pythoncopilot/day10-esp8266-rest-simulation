@@ -32,8 +32,6 @@ def add_device():
     db.add_device(name, status, temperature)
 
     return jsonify(response(True, "Data stored")), 201
-
-
 @app.route("/devices", methods=["GET"])
 def get_devices():
     rows = db.get_devices()
