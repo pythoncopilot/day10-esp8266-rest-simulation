@@ -1,87 +1,137 @@
-# Day 10 — ESP8266 REST Client (Simulation Mode)
+# Day 10 — ESP8266 REST Simulation + Hardware Ready IoT System
 
-## 🎯 Objective
+## 🚀 Overview
 
-Simulate an ESP8266 IoT device sending sensor data to a Flask REST API and storing it in SQLite.
+This project simulates an IoT system where a device sends sensor data to a Flask REST API and stores it in SQLite.
+
+It supports two modes:
+
+- Simulation Mode (Python-based ESP8266 simulator)
+- Hardware Mode (Real ESP8266 firmware)
 
 ---
 
 ## 🏗️ System Architecture
 
-```
-Simulated ESP8266 (Python Script)
-            ↓ HTTP POST
-        Flask REST API
-            ↓
-      SQLite Database
-```
+### Simulation Mode
+Simulated Device (Python)
+        ↓ HTTP POST
+Flask REST API
+        ↓
+SQLite Database
 
 ---
 
-## 📦 What is Simulated?
-
-Instead of real hardware:
-
-* Python script acts as ESP8266
-* Generates fake sensor data
-* Sends HTTP requests to API
-
----
-
-## 🧠 Key Concepts Learned
-
-* IoT device communication
-* REST API client-side usage
-* HTTP POST requests from devices
-* Sensor data simulation
-* Client-server architecture
-* IoT pipeline design
+### Hardware Mode
+ESP8266 (Arduino Firmware)
+        ↓ HTTP POST
+Flask REST API
+        ↓
+SQLite Database
 
 ---
 
 ## 📁 Project Structure
 
-```
 python/
-  api.py → Flask REST API server
-  db.py → SQLite database logic
-  sim_device.py → ESP8266 simulator
+- api.py              → Flask REST API server
+- db.py               → SQLite database logic
+- sim_device.py       → ESP8266 simulator (Python)
 
-esp8266/
-  device_reporter.ino → future real firmware
-```
+arduino/
+- esp8266_device.ino  → Real ESP8266 firmware (production ready)
+
+database/
+- inventory.db
+
+.github/
+- workflows/
+  - ci.yml
 
 ---
 
-## 🚀 How to Run
+## 🧠 Key Concepts Learned
 
-### 1. Start API
+- IoT device simulation
+- REST API communication (HTTP POST)
+- Flask backend development
+- SQLite database integration
+- Client-server architecture
+- Hardware vs simulation abstraction
+- Embedded system networking basics
 
-```
+---
+
+## 🔧 API Endpoints
+
+### POST /devices
+Stores IoT device data
+
+Example payload:
+{
+  "name": "ESP_SIM_01",
+  "status": "online",
+  "temperature": 25.5
+}
+
+---
+
+### GET /devices
+Returns all stored device data
+
+---
+
+## 🧪 How to Run (Simulation Mode)
+
+### Step 1 — Start API
 python python/api.py
-```
 
-### 2. Run simulated device
-
-```
+### Step 2 — Run simulator
 python python/sim_device.py
-```
 
 ---
 
-## 📡 Expected Flow
+## 🤖 Hardware Integration (ESP8266)
 
-1. Simulated device generates data
-2. Sends POST request to API
-3. API stores data in SQLite
-4. System logs device activity
+### Firmware Location
+arduino/esp8266_device.ino
+
+### How to switch to hardware mode:
+
+1. Flash ESP8266 using Arduino IDE
+2. Update WiFi credentials in .ino file
+3. Update server IP address:
+   http://YOUR_SERVER_IP:5000/devices
+4. Stop Python simulator
 
 ---
 
-## 🔥 Learning Outcome
+## 🔄 Architecture Modes
 
-You built your first IoT pipeline:
+Simulation Mode:
+Python Simulator → Flask API → SQLite
 
-* Device → API → Database
+Hardware Mode:
+ESP8266 Device → Flask API → SQLite
 
-This is the foundation of real IoT systems used in industry.
+Backend remains unchanged in both modes.
+
+---
+
+## 🎯 Learning Outcomes
+
+- Built full IoT data pipeline
+- Understood REST-based IoT communication
+- Learned device vs server separation
+- Practiced hardware abstraction design
+- Prepared system for real embedded deployment
+
+---
+
+## 🚀 Future Enhancements
+
+- Multi-device simulation
+- MQTT integration
+- Real-time dashboard
+- Device command system (API → ESP control)
+- WebSocket live updates
