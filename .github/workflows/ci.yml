@@ -1,0 +1,58 @@
+name: IoT Project Validation CI
+
+on:
+  push:
+    paths:
+      - "python/**"
+      - "arduino/**"
+      - "database/**"
+  pull_request:
+    paths:
+      - "python/**"
+      - "arduino/**"
+      - "database/**"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # -------------------------
+      # PYTHON VALIDATION
+      # -------------------------
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Compile Python files (syntax check)
+        run: |
+          python -m compileall python
+
+      - name: Test Python imports (api + db)
+        run: |
+          python -c "import sys; sys.path.append('python'); import api; import db"
+
+      # -------------------------
+      # DATABASE VALIDATION
+      # -------------------------
+      - name: Test SQLite DB initialization
+        run: |
+          python - << 'EOF'
+          import sys
+          sys.path.append('python')
+          import db
+
+          db.init_db()
+          print("DB init successful")
+          EOF
+
+      # -------------------------
+      # ARDUINO VALIDATION (BASIC)
+      # -------------------------
+      - name: Check Arduino files exist
+        run: |
+          test -f arduino/esp8266_device.ino && echo "Arduino file found"
