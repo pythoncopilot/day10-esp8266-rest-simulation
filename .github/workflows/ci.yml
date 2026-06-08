@@ -21,25 +21,35 @@ jobs:
         uses: actions/checkout@v4
 
       # -------------------------
-      # PYTHON VALIDATION
+      # SETUP PYTHON
       # -------------------------
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.10"
 
-      - name: Compile Python files (syntax check)
+      # -------------------------
+      # INSTALL DEPENDENCIES (IMPORTANT FIX)
+      # -------------------------
+      - name: Install dependencies
+        run: |
+          pip install flask requests
+
+      # -------------------------
+      # PYTHON VALIDATION
+      # -------------------------
+      - name: Compile Python files
         run: |
           python -m compileall python
 
-      - name: Test Python imports (api + db)
+      - name: Test imports
         run: |
           python -c "import sys; sys.path.append('python'); import api; import db"
 
       # -------------------------
-      # DATABASE VALIDATION
+      # DATABASE TEST
       # -------------------------
-      - name: Test SQLite DB initialization
+      - name: Test SQLite initialization
         run: |
           python - << 'EOF'
           import sys
@@ -51,8 +61,8 @@ jobs:
           EOF
 
       # -------------------------
-      # ARDUINO VALIDATION (BASIC)
+      # ARDUINO CHECK
       # -------------------------
-      - name: Check Arduino files exist
+      - name: Check Arduino file exists
         run: |
           test -f arduino/esp8266_device.ino && echo "Arduino file found"
